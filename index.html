@@ -180,8 +180,7 @@
 
 <!-- Sidebar de registros -->
 <div id="sidebar">
-
-    <h2>URLs</h2>
+    <h2>Registros de URLs</h2>
     <ul id="urlLogList"></ul>
 </div>
 
@@ -200,8 +199,8 @@
 <!-- Contenedor del menú de selección de formularios -->
 <div id="formSelectorContainer">
     <select id="formSelector">
-        <option value="https://forms.gle/F24w4yV4MK5u52S59">Formulario 1</option>
-        <option value="https://forms.gle/HmVVm9Kk23uvJD198">Formulario 2</option>
+        <option value="https://docs.google.com/forms/d/e/1FAIpQLSead1aQt8ZVVE-xZ8gmqO9dq5P4QORy7MwVAKTbhSrJBGziDA/viewform?usp=sharing">Formulario 1</option>
+        <option value="https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing">Formulario 2</option>
         <option value="https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing">Formulario 3</option>
         <option value="https://forms.gle/YGKAfNeWnSoTYdHi9">Formulario 4</option>
 
@@ -213,7 +212,7 @@
 <!-- Formulario de Google incrustado -->
 <iframe 
     id="googleForm"
-    src="https://forms.gle/F24w4yV4MK5u52S59"
+    src="https://forms.gle/YGKAfNeWnSoTYdHi9"
     allow="fullscreen">
 </iframe>
 
@@ -408,19 +407,6 @@
         document.getElementById('formSelectorContainer').style.display = 'none';
     });
 
-    // Función para registrar los movimientos del cursor
-    document.addEventListener('mousemove', function(e) {
-        const logList = document.getElementById('logList');
-        const newItem = document.createElement('li');
-        newItem.textContent = `X: ${e.clientX}, Y: ${e.clientY}`;
-        logList.appendChild(newItem);
-
-        // Almacenar el historial en localStorage
-        let cursorHistory = JSON.parse(localStorage.getItem('cursorHistory')) || [];
-        cursorHistory.push({ x: e.clientX, y: e.clientY, timestamp: new Date().toISOString() });
-        localStorage.setItem('cursorHistory', JSON.stringify(cursorHistory));
-    });
-
     // Función para registrar URLs accedidas
     function logURL(url) {
         const urlLogList = document.getElementById('urlLogList');
@@ -441,6 +427,11 @@
     const googleForm = document.getElementById('googleForm');
     googleForm.addEventListener('load', function() {
         logURL(googleForm.src);
+    });
+
+    // Registrar cambios de URL en la ventana principal
+    window.addEventListener('hashchange', function() {
+        logURL(window.location.href);
     });
 
     // Cargar el historial de URLs al cargar la página
