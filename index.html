@@ -180,8 +180,10 @@
 
 <!-- Sidebar de registros -->
 <div id="sidebar">
-    <h2>Registros del Cursor</h2>
+    <h2>Registros</h2>
     <ul id="logList"></ul>
+    <h2>URLs</h2>
+    <ul id="urlLogList"></ul>
 </div>
 
 <!-- Botón para activar el modo pantalla completa -->
@@ -199,8 +201,8 @@
 <!-- Contenedor del menú de selección de formularios -->
 <div id="formSelectorContainer">
     <select id="formSelector">
-        <option value="https://docs.google.com/forms/d/e/1FAIpQLSead1aQt8ZVVE-xZ8gmqO9dq5P4QORy7MwVAKTbhSrJBGziDA/viewform?usp=sharing">Formulario 1</option>
-        <option value="https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing">Formulario 2</option>
+        <option value="https://forms.gle/F24w4yV4MK5u52S59">Formulario 1</option>
+        <option value="https://forms.gle/HmVVm9Kk23uvJD198">Formulario 2</option>
         <option value="https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing">Formulario 3</option>
         <option value="https://forms.gle/YGKAfNeWnSoTYdHi9">Formulario 4</option>
 
@@ -212,7 +214,7 @@
 <!-- Formulario de Google incrustado -->
 <iframe 
     id="googleForm"
-    src="https://forms.gle/YGKAfNeWnSoTYdHi9"
+    src="https://forms.gle/F24w4yV4MK5u52S59"
     allow="fullscreen">
 </iframe>
 
@@ -418,6 +420,39 @@
         let cursorHistory = JSON.parse(localStorage.getItem('cursorHistory')) || [];
         cursorHistory.push({ x: e.clientX, y: e.clientY, timestamp: new Date().toISOString() });
         localStorage.setItem('cursorHistory', JSON.stringify(cursorHistory));
+    });
+
+    // Función para registrar URLs accedidas
+    function logURL(url) {
+        const urlLogList = document.getElementById('urlLogList');
+        const newItem = document.createElement('li');
+        newItem.textContent = url;
+        urlLogList.appendChild(newItem);
+
+        // Almacenar el historial en localStorage
+        let urlHistory = JSON.parse(localStorage.getItem('urlHistory')) || [];
+        urlHistory.push({ url: url, timestamp: new Date().toISOString() });
+        localStorage.setItem('urlHistory', JSON.stringify(urlHistory));
+    }
+
+    // Registrar la URL inicial
+    logURL(window.location.href);
+
+    // Registrar los cambios de URL en el iframe
+    const googleForm = document.getElementById('googleForm');
+    googleForm.addEventListener('load', function() {
+        logURL(googleForm.src);
+    });
+
+    // Cargar el historial de URLs al cargar la página
+    document.addEventListener("DOMContentLoaded", function() {
+        let urlHistory = JSON.parse(localStorage.getItem('urlHistory')) || [];
+        const urlLogList = document.getElementById('urlLogList');
+        urlHistory.forEach(function(entry) {
+            const newItem = document.createElement('li');
+            newItem.textContent = entry.url;
+            urlLogList.appendChild(newItem);
+        });
     });
 </script>
 <footer>
