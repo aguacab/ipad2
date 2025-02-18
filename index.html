@@ -225,32 +225,3 @@
 </footer>
 </body>
 </html>
-```
-
-**Cambios Realizados:**
-
-1.  **Función `isDesktop()`:** Esta función verifica si el dispositivo es un ordenador.  Comprueba si `window.orientation` es indefinido (lo cual suele indicar un ordenador) y que el userAgent no contenga 'IEMobile'
-
-2.  **Función `goFullscreen()`:**  Contiene el código para solicitar la pantalla completa, adaptándose a diferentes navegadores.
-
-3.  **Condicional para Pantalla Completa:**  Después de las definiciones de funciones, se agrega este código:
-
-    ```javascript
-    if (isDesktop()) {
-        goFullscreen();
-    }
-    ```
-
-    Este código llama a `goFullscreen()` solo si `isDesktop()` devuelve `true`.
-
-**Explicación:**
-
-*   El código ahora verifica si el usuario está accediendo desde un dispositivo de escritorio (ordenador) utilizando la función `isDesktop()`.
-*   Si es un ordenador, la función `goFullscreen()` se ejecuta para solicitar el modo de pantalla completa.  Si no es un ordenador, no se hace nada, y la página se muestra en modo normal.
-
-**Cómo usar este código:**
-
-1.  Copia el código HTML completo y guárdalo en un archivo con extensión `.html` (por ejemplo, `cuestionario.html`).
-2.  Abre el archivo `.html` en un navegador web.
-
-Ahora, cuando abras la página en un ordenador, debería automáticamente entrar en modo de pantalla completa.  En dispositivos móviles o tablets, se mostrará en modo normal.
