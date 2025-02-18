@@ -47,6 +47,22 @@
             z-index: 1000;
         }
 
+        /* Estilos para el desplegable de formularios */
+        #formSelectorContainer {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        #formSelector {
+            padding: 5px;
+            font-size: 16px;
+        }
+
         /* Estilos para el modal de advertencia */
         #blockModal {
             display: none;
@@ -73,10 +89,14 @@
 <!-- Contador de acciones no permitidas -->
 <div id="actionCounter">Acciones no permitidas: 0</div>
 
-<!-- Modal de advertencia -->
-<div id="blockModal">
-    <p><h1>Has salido de la ventana.</h1></p>  
-    <p><h1>Regresa en <span id="timer">8</span> segundos o la prueba se bloqueará.</h1></p>
+<!-- Desplegable de formularios -->
+<div id="formSelectorContainer">
+    <select id="formSelector">
+        <option value="https://forms.gle/e3RBXoC9EHMAXLKj8">Formulario 1</option>
+        <option value="https://forms.gle/GMQ97kmJe6mfcur78">Formulario 2</option>
+        <option value="https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing">Formulario 3</option>
+        <option value="https://forms.gle/YGKAfNeWnSoTYdHi9">Formulario 4</option>
+    </select>
 </div>
 
 <!-- Formulario de Google incrustado -->
@@ -85,6 +105,12 @@
     src="https://forms.gle/e3RBXoC9EHMAXLKj8"
     allow="fullscreen">
 </iframe>
+
+<!-- Modal de advertencia -->
+<div id="blockModal">
+    <p><h1>Has salido de la ventana.</h1></p>  
+    <p><h1>Regresa en <span id="timer">8</span> segundos o la prueba se bloqueará.</h1></p>
+</div>
 
 <script>
     let exitTimer; // Temporizador para el contador
@@ -169,6 +195,12 @@
             document.title = 'Cuestionario Restringido';
         }
     }
+
+    // Cambiar el formulario según la selección del usuario
+    document.getElementById('formSelector').addEventListener('change', function() {
+        const selectedForm = this.value;
+        document.getElementById('googleForm').src = selectedForm;
+    });
 
     // Prevenir salir de la página
     window.addEventListener("beforeunload", function(event) {
