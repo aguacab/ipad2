@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -59,14 +60,12 @@
             margin: 50px 0;
         }
 
-        /* Estilos para hacer ilegibles las capturas de pantalla */
-        .blurred {
-            filter: blur(10px);
-        }
-
-        /* Deshabilitar selección de imágenes */
-        img {
-            pointer-events: none;
+        /* Estilos para el listado de URLs */
+        #urlList {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: left;
+            display: inline-block;
         }
 
         /* Estilos para el botón de pantalla completa */
@@ -147,42 +146,9 @@
         #formSelectorContainer {
             margin: 20px;
         }
-
-        /* Estilos para el sidebar de registros */
-        #sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 200px;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px;
-            overflow-y: auto;
-            z-index: 1001;
-        }
-
-        #sidebar h2 {
-            margin-top: 0;
-        }
-
-        #sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        #sidebar li {
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
-
-<!-- Sidebar de registros -->
-<div id="sidebar">
-    <h2>Registros de URLs</h2>
-    <ul id="urlLogList"></ul>
-</div>
 
 <!-- Botón para activar el modo pantalla completa -->
 <button id="fullScreenBtn">Comenzar</button>
@@ -199,8 +165,8 @@
 <!-- Contenedor del menú de selección de formularios -->
 <div id="formSelectorContainer">
     <select id="formSelector">
-        <option value="https://docs.google.com/forms/d/e/1FAIpQLSead1aQt8ZVVE-xZ8gmqO9dq5P4QORy7MwVAKTbhSrJBGziDA/viewform?usp=sharing">Formulario 1</option>
-        <option value="https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing">Formulario 2</option>
+        <option value="https://forms.gle/e3RBXoC9EHMAXLKj8">Formulario 1</option>
+        <option value="https://forms.gle/GMQ97kmJe6mfcur78">Formulario 2</option>
         <option value="https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing">Formulario 3</option>
         <option value="https://forms.gle/YGKAfNeWnSoTYdHi9">Formulario 4</option>
         <!-- Agrega más opciones según sea necesario -->
@@ -211,16 +177,30 @@
 <!-- Formulario de Google incrustado -->
 <iframe 
     id="googleForm"
-    src="https://forms.gle/YGKAfNeWnSoTYdHi9"
+    src="https://forms.gle/e3RBXoC9EHMAXLKj8"
     allow="fullscreen">
 </iframe>
 
 <!-- Modal de advertencia -->
 <div id="blockModal">
-    <p><h1>Ha salido del formulario.</h1></p>  
+    <p><h1>Has salido de la ventana.</h1></p>  
+    <p><h1>Regresa en <span id="timer">8</span> segundos o la prueba se bloqueará.</h1></p>
+    <p>Acción no permitida registrada</p>
+    <!-- Listado de URLs -->
+    <div id="urlList">
+        <h3>URLs visitadas:</h3>
+        <ul>
+            <li>https://forms.gle/e3RBXoC9EHMAXLKj8</li>
+            <li>https://forms.gle/GMQ97kmJe6mfcur78</li>
+            <li>https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing</li>
+            <li>https://forms.gle/YGKAfNeWnSoTYdHi9</li>
+        </ul>
+    </div>
 </div>
 
 <script>
+    let exitTimer; // Temporizador para el contador
+    let timeLeft = 8; // Tiempo en segundos
     let isWarningVisible = false;
 
     // Obtener el contador y la marca de tiempo desde localStorage
@@ -271,12 +251,27 @@
             if (!isWarningVisible) {
                 isWarningVisible = true;
                 document.getElementById('blockModal').style.display = 'block';
-                logURL("Ha salido del formulario");
+                exitTimer = setInterval(function() {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        document.getElementById('timer').textContent = timeLeft;
+                        document.title = `Regresa en ${timeLeft} segundos`;
+                    } else {
+                        clearInterval(exitTimer);
+                        alert('La prueba se ha bloqueado.');
+                        // Redirigir al usuario a una página en blanco
+                        window.location.replace('about:blank');
+                    }
+                }, 1000);
             }
         } else {
             if (isWarningVisible) {
                 isWarningVisible = false;
+                clearInterval(exitTimer);
+                timeLeft = 8;
+                document.getElementById('timer').textContent = timeLeft;
                 document.getElementById('blockModal').style.display = 'none';
+                document.title = 'Cuestionario Restringido';
             }
         }
     });
@@ -387,43 +382,10 @@
         document.getElementById('formSelectorContainer').style.display = 'none';
     });
 
-    // Función para registrar URLs accedidas
-    function logURL(url) {
-        const urlLogList = document.getElementById('urlLogList');
-        const newItem = document.createElement('li');
-        newItem.textContent = url;
-        urlLogList.appendChild(newItem);
-
-        // Almacenar el historial en localStorage
-        let urlHistory = JSON.parse(localStorage.getItem('urlHistory')) || [];
-        urlHistory.push({ url: url, timestamp: new Date().toISOString() });
-        localStorage.setItem('urlHistory', JSON.stringify(urlHistory));
-    }
-
-    // Registrar la URL inicial
-    logURL(window.location.href);
-
-    // Registrar los cambios de URL en el iframe
-    const googleForm = document.getElementById('googleForm');
-    googleForm.addEventListener('load', function() {
-        logURL(googleForm.src);
-    });
-
-    // Registrar cambios de URL en la ventana principal
-    window.addEventListener('hashchange', function() {
-        logURL(window.location.href);
-    });
-
-    // Cargar el historial de URLs al cargar la página
-    document.addEventListener("DOMContentLoaded", function() {
-        let urlHistory = JSON.parse(localStorage.getItem('urlHistory')) || [];
-        const urlLogList = document.getElementById('urlLogList');
-        urlHistory.forEach(function(entry) {
-            const newItem = document.createElement('li');
-            newItem.textContent = entry.url;
-            urlLogList.appendChild(newItem);
-        });
-    });
+    // Ocultar el modal después de 8 segundos
+    setTimeout(function() {
+        document.getElementById('blockModal').style.display = 'none';
+    }, 8000); // 8000 ms = 8 segundos
 </script>
 <footer>
     <p>No se permite tener otras pestañas o ventanas, ni realizar capturas ni salir de la pantalla de la prueba. Cualquier incumplimiento conlleva la anulación de la prueba.</p>
