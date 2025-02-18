@@ -40,6 +40,34 @@
             color: red;
         }
 
+        /* Estilos para el registro de URLs */
+        #urlLog {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 300px;
+            text-align: left;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        #urlLog h3 {
+            margin: 0 0 10px 0;
+        }
+
+        #urlLog ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #urlLog ul li {
+            margin: 5px 0;
+        }
+
         /* Estilos para el modal */
         #blockModal {
             display: none;
@@ -59,146 +87,68 @@
         #blockModal p {
             margin: 50px 0;
         }
-
-        /* Estilos para el listado de URLs */
-        #urlList {
-            margin-top: 20px;
-            font-size: 18px;
-            text-align: left;
-            display: inline-block;
-        }
-
-        /* Estilos para el botón de pantalla completa */
-        #fullScreenBtn {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50%; /* Ocupa el 50% del ancho de la pantalla */
-            height: 100%; /* Ocupa todo el alto de la pantalla */
-            padding: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-            z-index: 1000;
-            transition: opacity 0.5s ease;
-        }
-        #fullScreenBtn:hover {
-            background-color: #0056b3;
-        }
-
-        /* Estilos para el botón que aparece en pantalla completa */
-        #extraBtn {
-            display: none;
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            z-index: 1000;
-        }
-        #extraBtn:hover {
-            background-color: #218838;
-        }
-
-        /* Estilos para el botón que aparece al salir de pantalla completa */
-        #exitFullScreenBtn {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%; /* Ocupa el 80% del ancho de la pantalla */
-            height: 100%; /* Ocupa todo el alto de la pantalla */
-            padding: 20px;
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-            z-index: 1000;
-            transition: opacity 0.5s ease;
-        }
-        #exitFullScreenBtn:hover {
-            background-color: #c82333;
-        }
-
-        /* Estilos para el contador de acciones no permitidas */
-        #actionCounter {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 1000;
-        }
-
-        /* Estilos para el menú de selección de formularios */
-        #formSelectorContainer {
-            margin: 20px;
-        }
     </style>
 </head>
 <body>
 
-<!-- Botón para activar el modo pantalla completa -->
-<button id="fullScreenBtn">Comenzar</button>
-
-<!-- Botón que aparece en pantalla completa -->
-<button id="extraBtn">No salgas de la pantalla</button>
-
-<!-- Botón que aparece al salir de pantalla completa -->
-<button id="exitFullScreenBtn">Has salido de la Pantalla Completa</button>
-
-<!-- Contador de acciones no permitidas -->
-<div id="actionCounter">Acciones no permitidas: 0</div>
-
-<!-- Contenedor del menú de selección de formularios -->
-<div id="formSelectorContainer">
-    <select id="formSelector">
-        <option value="https://forms.gle/e3RBXoC9EHMAXLKj8">Formulario 1</option>
-        <option value="https://forms.gle/GMQ97kmJe6mfcur78">Formulario 2</option>
-        <option value="https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing">Formulario 3</option>
-        <option value="https://forms.gle/YGKAfNeWnSoTYdHi9">Formulario 4</option>
-        <!-- Agrega más opciones según sea necesario -->
-    </select>
-    <button id="acceptBtn">Aceptar</button>
+<!-- Registro de URLs -->
+<div id="urlLog">
+    <h3>Registro de Acciones:</h3>
+    <ul id="urlList"></ul>
 </div>
-
-<!-- Formulario de Google incrustado -->
-<iframe 
-    id="googleForm"
-    src="https://forms.gle/e3RBXoC9EHMAXLKj8"
-    allow="fullscreen">
-</iframe>
 
 <!-- Modal de advertencia -->
 <div id="blockModal">
     <p><h1>Has salido de la ventana.</h1></p>  
     <p><h1>Regresa en <span id="timer">8</span> segundos o la prueba se bloqueará.</h1></p>
     <p>Acción no permitida registrada</p>
-    <!-- Listado de URLs -->
-    <div id="urlList">
-        <h3>URLs visitadas:</h3>
-        <ul>
-            <li>https://forms.gle/e3RBXoC9EHMAXLKj8</li>
-            <li>https://forms.gle/GMQ97kmJe6mfcur78</li>
-            <li>https://docs.google.com/forms/d/e/1FAIpQLSfD2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2/viewform?usp=sharing</li>
-            <li>https://forms.gle/YGKAfNeWnSoTYdHi9</li>
-        </ul>
-    </div>
 </div>
 
 <script>
+    // Obtener el registro de URLs desde localStorage o inicializarlo si no existe
+    let urlLog = JSON.parse(localStorage.getItem('urlLog')) || [];
+
+    // Función para actualizar el registro en pantalla
+    function updateUrlLog() {
+        const urlList = document.getElementById('urlList');
+        urlList.innerHTML = ''; // Limpiar la lista
+        urlLog.forEach(entry => {
+            const li = document.createElement('li');
+            li.textContent = entry;
+            urlList.appendChild(li);
+        });
+    }
+
+    // Función para agregar una URL o acción al registro
+    function logUrl(url) {
+        urlLog.push(url); // Agregar la URL al registro
+        localStorage.setItem('urlLog', JSON.stringify(urlLog)); // Guardar en localStorage
+        updateUrlLog(); // Actualizar la lista en pantalla
+    }
+
+    // Capturar eventos de foco y clic
+    document.addEventListener('focus', function(event) {
+        const target = event.target;
+        if (target.tagName === 'A' && target.href) {
+            logUrl(target.href); // Registrar la URL del enlace
+        } else {
+            logUrl('Acción no permitida: Foco en elemento no permitido'); // Registrar acción no permitida
+        }
+    }, true);
+
+    document.addEventListener('click', function(event) {
+        const target = event.target;
+        if (target.tagName === 'A' && target.href) {
+            logUrl(target.href); // Registrar la URL del enlace
+        } else {
+            logUrl('Acción no permitida: Clic en elemento no permitido'); // Registrar acción no permitida
+        }
+    }, true);
+
+    // Inicializar el registro en pantalla
+    updateUrlLog();
+
+    // Resto del código (manejo de acciones no permitidas, pantalla completa, etc.)
     let exitTimer; // Temporizador para el contador
     let timeLeft = 8; // Tiempo en segundos
     let isWarningVisible = false;
@@ -276,31 +226,6 @@
         }
     });
 
-    // Hacer ilegibles las capturas de pantalla
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            document.body.classList.add('blurred');
-        } else {
-            document.body.classList.remove('blurred');
-        }
-    });
-
-    // Deshabilitar el zoom
-    document.addEventListener('wheel', function(e) {
-        if (e.ctrlKey) {
-            e.preventDefault();
-            updateActionCounter();
-        }
-    }, { passive: false });
-
-    // Deshabilitar gestos multitáctiles
-    document.addEventListener('touchmove', function(e) {
-        if (e.touches.length > 1) {
-            e.preventDefault();
-            updateActionCounter();
-        }
-    }, { passive: false });
-
     // Mostrar advertencia al intentar salir de la página
     window.addEventListener("beforeunload", function (event) {
         event.preventDefault();
@@ -315,77 +240,6 @@
         alert("No puedes volver atrás en esta página.");
         updateActionCounter();
     });
-
-    // Activar modo pantalla completa automáticamente al cargar la página
-    document.addEventListener("DOMContentLoaded", function() {
-        function requestFullScreen() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-                document.documentElement.mozRequestFullScreen();
-            }
-        }
-
-        // Intentar activar pantalla completa inmediatamente
-        requestFullScreen();
-
-        // Intentar activar pantalla completa al primer clic/tap si no se activó antes
-        document.addEventListener('click', requestFullScreen);
-        document.addEventListener('touchstart', requestFullScreen);
-    });
-
-    // Mostrar el botón extra cuando la pantalla esté en modo pantalla completa
-    document.addEventListener('fullscreenchange', function() {
-        const extraBtn = document.getElementById('extraBtn');
-        const exitFullScreenBtn = document.getElementById('exitFullScreenBtn');
-        if (document.fullscreenElement) {
-            extraBtn.style.display = 'block';
-            exitFullScreenBtn.style.display = 'none';
-        } else {
-            extraBtn.style.display = 'none';
-            exitFullScreenBtn.style.display = 'block';
-            updateActionCounter(); // Incrementar el contador al salir de pantalla completa
-        }
-    });
-
-    // Preguntar al usuario antes de realizar alguna acción al hacer clic en el botón "Salir de Pantalla Completa"
-    document.addEventListener("DOMContentLoaded", function() {
-        const exitFullScreenBtn = document.getElementById('exitFullScreenBtn');
-        if (exitFullScreenBtn) {
-            exitFullScreenBtn.addEventListener('click', function() {
-                if (confirm("Acción no permitida registrada")) {
-                    updateActionCounter();
-                }
-            });
-        }
-    });
-
-    // Ocultar el botón de pantalla completa al hacer clic en él
-    document.getElementById('fullScreenBtn').addEventListener('click', function() {
-        this.style.opacity = '0';
-        setTimeout(() => {
-            this.style.display = 'none';
-        }, 500); // Esperar a que la transición de opacidad termine
-    });
-
-    // Inicializar el contador de acciones no permitidas desde localStorage
-    document.getElementById('actionCounter').textContent = `Acciones no permitidas: ${actionCounter}`;
-
-    // Cambiar el formulario de Google según la selección del usuario y ocultar el menú
-    document.getElementById('acceptBtn').addEventListener('click', function() {
-        const selectedForm = document.getElementById('formSelector').value;
-        document.getElementById('googleForm').src = selectedForm;
-        document.getElementById('formSelectorContainer').style.display = 'none';
-    });
-
-    // Ocultar el modal después de 8 segundos
-    setTimeout(function() {
-        document.getElementById('blockModal').style.display = 'none';
-    }, 8000); // 8000 ms = 8 segundos
 </script>
 <footer>
     <p>No se permite tener otras pestañas o ventanas, ni realizar capturas ni salir de la pantalla de la prueba. Cualquier incumplimiento conlleva la anulación de la prueba.</p>
