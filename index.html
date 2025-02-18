@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,  maximum-scale=1.0, user-scalable=no">
     <title>Cuestionario Restringido</title>
     <style>
         /* Estilos generales */
@@ -12,10 +13,10 @@
             background: linear-gradient(90deg, #ff7eb3, #8b5cf6);
             color: #fff;
             text-align: center;
-            overflow: hidden; /* Evita barras de desplazamiento innecesarias */
+            overflow: hidden;
             user-select: none; /* Deshabilitar selección de texto */
-            -webkit-user-select: none;
-            -ms-user-select: none;
+            -webkit-user-select: none; /* Deshabilitar selección de texto en Safari */
+            -ms-user-select: none; /* Deshabilitar selección de texto en IE */
         }
 
         header, footer {
@@ -25,10 +26,9 @@
 
         iframe {
             width: 100%;
-            height: calc(100vh - 120px); /* Ajuste para header y footer */
+            height: 80vh;
             border: none;
             margin-top: 20px;
-            display: block; /* Elimina espacio extra debajo del iframe */
         }
 
         h1 {
@@ -72,26 +72,22 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 0, 0, 0.9);
+            background-color: rgba(255, 0, 0, 0.9); /* Fondo rojo semitransparente */
             color: white;
             text-align: center;
             padding: 20px;
             font-size: 24px;
-            z-index: 9999;
+            z-index: 9999; /* Asegurarse de que el modal esté por encima de todo */
         }
 
         #blockModal p {
             margin: 50px 0;
         }
 
-        /* Estilos responsivos */
+        /* Media query para ajustar el iframe en pantallas más pequeñas */
         @media (max-width: 768px) {
-            #formSelectorContainer {
-                position: static; /* Quita la posición fija en pantallas pequeñas */
-                margin-bottom: 10px; /* Agrega un margen inferior */
-            }
             iframe {
-                height: calc(100vh - 180px); /* Ajusta la altura para pantallas más pequeñas */
+                height: 70vh; /* Ajusta la altura para pantallas más pequeñas */
             }
         }
     </style>
@@ -124,28 +120,33 @@
 </div>
 
 <script>
-    let exitTimer;
-    let timeLeft = 8;
+    let exitTimer; // Temporizador para el contador
+    let timeLeft = 8; // Tiempo en segundos
     let isWarningVisible = false;
-    let actionCounter = 0;
+    let actionCounter = 0; // Contador de acciones no permitidas
 
+    // Función para registrar acciones no permitidas
     function logAction() {
         actionCounter++;
         document.getElementById('actionCounter').textContent = `Acciones no permitidas: ${actionCounter}`;
-        if (actionCounter % 6 === 0) {
+        if (actionCounter % 6 === 0) { // Bloquear cada 6 acciones no permitidas
             window.location.replace('about:blank');
         }
     }
 
+    // Monitorear cambios de pestaña o ventana
     window.addEventListener('visibilitychange', function() {
         if (document.hidden) {
-            logAction();
-            showWarning();
+            // Si el usuario cambia de pestaña o ventana
+            logAction(); // Registrar acción no permitida
+            showWarning(); // Mostrar advertencia
         } else {
-            clearWarning();
+            // Si el usuario regresa a la pestaña
+            clearWarning(); // Ocultar advertencia
         }
     });
 
+    // Función para mostrar la advertencia y el contador de 8 segundos
     function showWarning() {
         if (!isWarningVisible) {
             isWarningVisible = true;
@@ -157,12 +158,13 @@
                     document.title = `Regresa en ${timeLeft} segundos`;
                 } else {
                     clearInterval(exitTimer);
-                    window.location.replace('about:blank');
+                    window.location.replace('about:blank'); // Redirigir a una ventana en blanco
                 }
             }, 1000);
         }
     }
 
+    // Función para ocultar la advertencia y reiniciar el contador
     function clearWarning() {
         if (isWarningVisible) {
             isWarningVisible = false;
@@ -174,50 +176,54 @@
         }
     }
 
+    // Cambiar el formulario según la selección del usuario
     document.getElementById('formSelector').addEventListener('change', function() {
         const selectedForm = this.value;
         document.getElementById('googleForm').src = selectedForm;
     });
 
+    // Prevenir salir de la página
     window.addEventListener("beforeunload", function(event) {
         event.preventDefault();
-        event.returnValue = "";
+        event.returnValue = ""; // Mostrar cuadro de diálogo de confirmación
     });
 
+    // Prevenir el uso de teclas no permitidas
     document.addEventListener('keydown', function(event) {
         const forbiddenKeys = ['F11', 'Escape', 'PrintScreen'];
         if (forbiddenKeys.includes(event.key) || (event.ctrlKey && ['c', 'u', 's', 'p', 'a'].includes(event.key))) {
             event.preventDefault();
-            logAction();
+            logAction(); // Registrar acción no permitida
         }
     });
 
+    // Prevenir clic derecho
     document.addEventListener('contextmenu', function(event) {
         event.preventDefault();
-        logAction();
+        logAction(); // Registrar acción no permitida
     });
 
     // Función para detectar si es un ordenador
-    function esOrdenador() {
-        return (typeof window.orientation === "undefined") || (navigator.userAgent.indexOf('IEMobile') === -1);
+    function isDesktop() {
+      return (typeof window.orientation === "undefined") || (navigator.userAgent.indexOf('IEMobile') === -1);
     }
 
-    // Función para entrar en pantalla completa
-    function entrarPantallaCompleta() {
+    // Función para pantalla completa
+    function fullScreen() {
         if (document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen();
         } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
             document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
             document.documentElement.webkitRequestFullscreen();
         } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
             document.documentElement.msRequestFullscreen();
         }
     }
 
-    // Verificar si es ordenador y entrar en pantalla completa
-    if (esOrdenador()) {
-        entrarPantallaCompleta();
+    // Pantalla completa solo en ordenadores
+    if (isDesktop()) {
+        fullScreen();
     }
 
 
